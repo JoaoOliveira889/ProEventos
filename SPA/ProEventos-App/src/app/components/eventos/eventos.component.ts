@@ -8,36 +8,32 @@ import { NgxSpinnerService } from 'ngx-spinner';
 @Component({
   selector: 'app-eventos',
   templateUrl: './eventos.component.html',
-  styleUrls: ['./eventos.component.scss'],
+  styleUrls: ['./eventos.component.scss']
 })
 export class EventosComponent implements OnInit {
-  modalRef?: BsModalRef;
+  modalRef!: BsModalRef;
   public eventos: Evento[] = [];
   public eventosFiltrados: Evento[] = [];
 
   public larguraImagem = 150;
-  public alturaImagem = 75;
   public margemImagem = 2;
   public exibirImagem = true;
-  private filtroListaListado = '';
+  private filtroListado = '';
 
   public get filtroLista(): string {
-    return this.filtroListaListado;
+    return this.filtroListado;
   }
 
   public set filtroLista(value: string) {
-    this.filtroListaListado = value;
-    this.eventosFiltrados = this.filtroLista
-      ? this.filtrarEventos(this.filtroLista)
-      : this.eventos;
+    this.filtroListado = value;
+    this.eventosFiltrados = this.filtroLista ? this.filtrarEventos(this.filtroLista) : this.eventos;
   }
 
   public filtrarEventos(filtrarPor: string): Evento[] {
     filtrarPor = filtrarPor.toLocaleLowerCase();
     return this.eventos.filter(
-      (evento: any) =>
-        evento.tema.toLocaleLowerCase().indexOf(filtrarPor) !== -1 ||
-        evento.local.toLocaleLowerCase().indexOf(filtrarPor) !== -1
+      evento => evento.tema.toLocaleLowerCase().indexOf(filtrarPor) !== -1 ||
+      evento.local.toLocaleLowerCase().indexOf(filtrarPor) !== -1
     );
   }
 
@@ -46,14 +42,14 @@ export class EventosComponent implements OnInit {
     private modalService: BsModalService,
     private toastr: ToastrService,
     private spinner: NgxSpinnerService
-    ) {}
+  ) { }
 
   public ngOnInit(): void {
     this.spinner.show();
     this.getEventos();
   }
 
-  public alterarEstadoImagem(): void {
+  public alterarImagem(): void {
     this.exibirImagem = !this.exibirImagem;
   }
 
@@ -64,7 +60,7 @@ export class EventosComponent implements OnInit {
         this.eventosFiltrados = this.eventos;
       },
       error: (error: any) => {
-        this.spinner.hide(),
+        this.spinner.hide();
         this.toastr.error('Erro ao Carregar os Eventos', 'Erro!');
       },
       complete: () => this.spinner.hide()
@@ -76,11 +72,11 @@ export class EventosComponent implements OnInit {
   }
 
   confirm(): void {
-    this.modalRef?.hide();
-    this.toastr.success('O Evento foi deletado com Sucesso', 'Deletado!');
+    this.modalRef.hide();
+    this.toastr.success('O Evento foi deletado com Sucesso.', 'Deletado!');
   }
 
   decline(): void {
-    this.modalRef?.hide();
+    this.modalRef.hide();
   }
 }
