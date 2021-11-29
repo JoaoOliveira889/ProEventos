@@ -9,9 +9,8 @@ public class EventoService : IEventoService
     private readonly IEventoPersist _eventoPersist;
     public EventoService(IGeralPersist geralPersist, IEventoPersist eventoPersist)
     {
-        _geralPersist = geralPersist;
         _eventoPersist = eventoPersist;
-
+        _geralPersist = geralPersist;
     }
     public async Task<Evento> AddEventos(Evento model)
     {
@@ -26,22 +25,20 @@ public class EventoService : IEventoService
         }
         catch (Exception ex)
         {
-
-            throw new ArgumentException(ex.Message);
+            throw new Exception(ex.Message);
         }
     }
 
-    public async Task<Evento> UpdateEvento(int id, Evento model)
+    public async Task<Evento> UpdateEvento(int eventoId, Evento model)
     {
         try
         {
-            var evento = await _eventoPersist.GetEventoByIdAsync(id, false);
+            var evento = await _eventoPersist.GetEventoByIdAsync(eventoId, false);
             if (evento == null) return null;
 
             model.Id = evento.Id;
 
             _geralPersist.Update(model);
-
             if (await _geralPersist.SaveChangesAsync())
             {
                 return await _eventoPersist.GetEventoByIdAsync(model.Id, false);
@@ -50,26 +47,23 @@ public class EventoService : IEventoService
         }
         catch (Exception ex)
         {
-
-            throw new ArgumentException(ex.Message);
+            throw new Exception(ex.Message);
         }
     }
 
-    public async Task<bool> DeleteEvento(int id)
+    public async Task<bool> DeleteEvento(int eventoId)
     {
         try
         {
-            var evento = await _eventoPersist.GetEventoByIdAsync(id, false);
-            if (evento == null) throw new Exception("Evento para delete nao econtrado");
+            var evento = await _eventoPersist.GetEventoByIdAsync(eventoId, false);
+            if (evento == null) throw new Exception("Evento para delete não encontrado.");
 
-            _geralPersist.Delete(evento);
-
+            _geralPersist.Delete<Evento>(evento);
             return await _geralPersist.SaveChangesAsync();
         }
         catch (Exception ex)
         {
-
-            throw new ArgumentException(ex.Message);
+            throw new Exception(ex.Message);
         }
     }
 
@@ -84,22 +78,7 @@ public class EventoService : IEventoService
         }
         catch (Exception ex)
         {
-            throw new ArgumentNullException(ex.Message);
-        }
-    }
-
-    public async Task<Evento> GetAllEventoByIdAsync(int id, bool includePalestrantes = false)
-    {
-        try
-        {
-            var eventos = await _eventoPersist.GetEventoByIdAsync(id, includePalestrantes);
-            if (eventos == null) return null;
-
-            return eventos;
-        }
-        catch (Exception ex)
-        {
-            throw new ArgumentNullException(ex.Message);
+            throw new Exception(ex.Message);
         }
     }
 
@@ -114,9 +93,22 @@ public class EventoService : IEventoService
         }
         catch (Exception ex)
         {
-            throw new ArgumentNullException(ex.Message);
+            throw new Exception(ex.Message);
         }
     }
 
+    public async Task<Evento> GetEventoByIdAsync(int eventoId, bool includePalestrantes = false)
+    {
+        try
+        {
+            var eventos = await _eventoPersist.GetEventoByIdAsync(eventoId, includePalestrantes);
+            if (eventos == null) return null;
 
+            return eventos;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
+    }
 }

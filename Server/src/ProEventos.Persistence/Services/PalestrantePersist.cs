@@ -7,19 +7,18 @@ namespace ProEventos.Persistence
 {
     public class PalestrantePersist : IPalestrantePersist
     {
-        private readonly ProEventosContext _context;
-
+         private readonly ProEventosContext _context;
         public PalestrantePersist(ProEventosContext context)
         {
             _context = context;
         }
 
-        public async Task<Palestrante[]> GetAllPalestrantesAsync(bool includePalestrantes = false)
+        public async Task<Palestrante[]> GetAllPalestrantesAsync(bool includeEventos = false)
         {
             IQueryable<Palestrante> query = _context.Palestrantes
                 .Include(p => p.RedesSociais);
 
-            if (includePalestrantes)
+            if (includeEventos)
             {
                 query = query
                     .Include(p => p.PalestrantesEventos)
@@ -44,12 +43,12 @@ namespace ProEventos.Persistence
             }
 
             query = query.AsNoTracking().OrderBy(p => p.Id)
-                .Where(p => p.Nome.ToLower().Contains(nome.ToLower()));
+                         .Where(p => p.Nome.ToLower().Contains(nome.ToLower()));
 
             return await query.ToArrayAsync();
         }
 
-        public async Task<Palestrante> GetAllPalestranteByIdAsync(int id, bool includeEventos)
+        public async Task<Palestrante> GetPalestranteByIdAsync(int palestranteId, bool includeEventos)
         {
             IQueryable<Palestrante> query = _context.Palestrantes
                 .Include(p => p.RedesSociais);
@@ -62,7 +61,7 @@ namespace ProEventos.Persistence
             }
 
             query = query.AsNoTracking().OrderBy(p => p.Id)
-                .Where(p => p.Id == id);
+                         .Where(p => p.Id == palestranteId);
 
             return await query.FirstOrDefaultAsync();
         }
