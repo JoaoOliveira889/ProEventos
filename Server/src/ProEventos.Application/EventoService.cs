@@ -17,11 +17,11 @@ public class EventoService : IEventoService
         try
         {
             _geralPersist.Add<Evento>(model);
-            if (await _geralPersist.SaveChangesAsync())
-            {
-                return await _eventoPersist.GetEventoByIdAsync(model.Id, false);
-            }
-            return null;
+
+            await _geralPersist.SaveChangesAsync();
+
+            return await _eventoPersist.GetEventoByIdAsync(model.Id, false);
+
         }
         catch (Exception ex)
         {
@@ -34,16 +34,13 @@ public class EventoService : IEventoService
         try
         {
             var evento = await _eventoPersist.GetEventoByIdAsync(eventoId, false);
-            if (evento == null) return null;
 
             model.Id = evento.Id;
 
             _geralPersist.Update(model);
-            if (await _geralPersist.SaveChangesAsync())
-            {
-                return await _eventoPersist.GetEventoByIdAsync(model.Id, false);
-            }
-            return null;
+            await _geralPersist.SaveChangesAsync();
+            return await _eventoPersist.GetEventoByIdAsync(model.Id, false);
+
         }
         catch (Exception ex)
         {
@@ -72,7 +69,6 @@ public class EventoService : IEventoService
         try
         {
             var eventos = await _eventoPersist.GetAllEventosAsync(includePalestrantes);
-            if (eventos == null) return null;
 
             return eventos;
         }
@@ -87,7 +83,6 @@ public class EventoService : IEventoService
         try
         {
             var eventos = await _eventoPersist.GetAllEventosByTemaAsync(tema, includePalestrantes);
-            if (eventos == null) return null;
 
             return eventos;
         }
@@ -102,7 +97,6 @@ public class EventoService : IEventoService
         try
         {
             var eventos = await _eventoPersist.GetEventoByIdAsync(eventoId, includePalestrantes);
-            if (eventos == null) return null;
 
             return eventos;
         }
